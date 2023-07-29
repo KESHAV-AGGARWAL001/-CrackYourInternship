@@ -165,3 +165,19 @@ public:
         return count;
     }
 };
+
+//  find all duplicates in an array 
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(n+1, 0);
+        for(auto it : nums) ans[it]++;
+        vector<int> result;
+        for(int i=1; i<=n;i++){
+            if(ans[i] == 2) result.push_back(i);
+        }
+        return result;
+    }
+};
