@@ -147,3 +147,21 @@ public:
         return dp[0][1];
     }
 };
+
+//  subarray sum divisible by k
+
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& nums, int k) {
+        partial_sum(nums.begin() , nums.end() , nums.begin());
+        unordered_map<int,int> map;
+        map[0] = 1;
+        int count = 0;
+        for(auto it : nums){
+            if(map.find((it%k+k)%k) != map.end()) count += map[(it%k+k)%k];
+            map[(it%k+k)%k]++;
+        }
+
+        return count;
+    }
+};
