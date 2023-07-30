@@ -263,3 +263,158 @@ public:
         return output;
     }
 };
+
+
+//  subarray sum equals k 
+
+class Solution {
+public:
+    int subarraySum(vector<int>& arr, int k) {
+        int n = arr.size();
+        vector<int> prefix(n,0);         
+        prefix[0] = arr[0];
+        for(int i = 1; i < n; i++)
+        {
+            prefix[i] = arr[i] + prefix[i - 1];
+        }
+        
+        unordered_map<int,int> mp; 
+        
+        int total = 0; 
+        
+        for(int i = 0; i < n; i++) 
+        {
+            if(prefix[i] == k)
+                total ++;
+            if(mp.find(prefix[i] - k) != mp.end())
+            {
+                total += mp[prefix[i] - k]; 
+            }
+            
+            mp[prefix[i]]++; 
+        }
+        
+        return total; 
+    }
+};
+
+//  spiral matrix 
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int>ans;
+        int top = 0, bottom = matrix.size()-1 , right = matrix[0].size()-1, left = 0;
+        while(top<=bottom && left<=right){
+            for(int i=left;i<=right;i++){
+                ans.push_back(matrix[top][i]);
+            }
+            top++;
+            for(int i=top;i<=bottom;i++){
+                ans.push_back(matrix[i][right]);
+            }
+            right--;
+            if(top<=bottom){
+                for(int i=right;i>=left;i--){
+                    ans.push_back(matrix[bottom][i]);
+                }
+                bottom--;
+            }
+            if(left<=right){
+                for(int i=bottom;i>=top;i--){
+                ans.push_back(matrix[i][left]);
+            }
+                left++;
+            }
+        }
+        return ans;
+    }
+};
+
+
+//  word search problem 
+
+class Solution {
+public:
+    bool exist(vector<vector<char>>& b, string w) {
+        int n = b.size();
+        
+        int m = b[0].size();
+        
+        int i,j;
+        
+        for(i=0;i<n;i++){
+            for(j=0;j<m;j++){
+                if(b[i][j] == w[0]){
+                    char t = b[i][j];
+                    b[i][j] = '1';
+                    
+                    if(solve(i,j,n,m,1,w,b))
+                        return true;
+                    
+                    b[i][j] = t;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    bool solve(int i, int j, int n, int m, int in, string w, vector<vector<char>>& b){
+        if(in == w.size())
+            return true;
+        
+        int a[] = {0,0,1,-1};
+        int x[] = {1,-1,0,0};
+        
+        for(int k=0;k<4;k++){
+            int r = i+a[k];
+            int c = j+x[k];
+            
+            if(r<0 || c<0 || r>=n || c>=m || b[r][c]=='1' || b[r][c]!=w[in])
+                continue;
+            
+            char t = b[r][c];
+            b[r][c] = '1';
+            if(solve(r,c,n,m,in+1,w,b))
+                return true;
+            
+            b[r][c] = t;
+        }
+            
+        return false;
+    }
+};
+
+//  jump game - greedy and dynamic programming problem 
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        int n = nums.size();
+        int reach = 0;
+        for (int i = 0; i < n; i++) {
+            if(i > reach || reach >= n-1)
+                break;
+            reach = max(reach, i + nums[i]);
+        }
+        return reach >= n-1;
+    }
+};
+
+//  merge sorted array
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        int len = nums1.size() - m;
+        while(len--){
+            nums1.pop_back();
+        }
+        for(int i=0;i<n;i++){
+            nums1.push_back(nums2[i]);
+        }
+        sort(nums1.begin() , nums1.end());
+    }
+};
+
+
