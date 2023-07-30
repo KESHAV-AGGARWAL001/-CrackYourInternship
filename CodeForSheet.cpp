@@ -181,3 +181,85 @@ public:
         return result;
     }
 };
+
+//  containing most water
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int f = 0;
+        int s = height.size()-1;
+        int value = 0;
+        while(f<s){
+            value = max(value, min(height[f] , height[s]) * (s-f));
+            if(height[f] <= height[s]){
+                f++;
+            }
+            else{
+                s--;
+            }
+        }
+        return value;
+    }
+};
+
+//  3 sum problem 
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        set<vector<int>> vec;
+        sort(nums.begin(), nums.end());
+        for (int i = 0; i < nums.size() - 2; i++) {
+        int left = i + 1, right = nums.size() - 1;
+        while (left < right) {
+            if (nums[i] + nums[left] + nums[right] < 0) left++;
+            else if (nums[i] + nums[left] + nums[right] > 0) right--;
+            else {
+                vector<int> temp;
+                temp.insert(temp.begin() , {nums[i] , nums[left] , nums[right]});
+                vec.insert(temp);
+                left++;right--;
+            }
+        }
+        }
+        vector<vector<int>> v;
+        for(auto it:vec) v.push_back(it);
+        return v;
+    }
+};
+
+
+//  4 sum problem 
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> output;
+        for(int i=0; i<n-3; i++){
+            for(int j=i+1; j<n-2; j++){
+                long long newTarget = (long long)target - (long long)nums[i] - (long long)nums[j];
+                int low = j+1, high = n-1;
+                while(low < high){
+                    if(nums[low] + nums[high] < newTarget){
+                        low++;
+                    }
+                    else if(nums[low] + nums[high] > newTarget){
+                        high--;
+                    }
+                    else{
+                        output.push_back({nums[i], nums[j], nums[low], nums[high]});
+                        int tempIndex1 = low, tempIndex2 = high;
+                        while(low < high && nums[low] == nums[tempIndex1]) low++;
+                        while(low < high && nums[high] == nums[tempIndex2]) high--;
+                    }
+                }
+                while(j+1 < n && nums[j] == nums[j+1]) j++;
+            }
+            while(i+1 < n && nums[i] == nums[i+1]) i++;
+        }
+        return output;
+    }
+};
