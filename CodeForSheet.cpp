@@ -457,3 +457,120 @@ public:
     }
 };
 
+// majority element 
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        sort(nums.begin() , nums.end());
+        int num = nums.size();
+        return nums[num/2];
+    }
+};
+
+//  reverse pairs 
+
+class Solution {
+private: 
+    void merge(vector<int>& nums, int low, int mid, int high, int& reversePairsCount){
+        int j = mid+1;
+        for(int i=low; i<=mid; i++){
+            while(j<=high && nums[i] > 2*(long long)nums[j]){
+                j++;
+            }
+            reversePairsCount += j-(mid+1);
+        }
+        int size = high-low+1;
+        vector<int> temp(size, 0);
+        int left = low, right = mid+1, k=0;
+        while(left<=mid && right<=high){
+            if(nums[left] < nums[right]){
+                temp[k++] = nums[left++];
+            }
+            else{
+                temp[k++] = nums[right++];
+            }
+        }
+        while(left<=mid){
+            temp[k++] = nums[left++]; 
+        }
+        while(right<=high){
+            temp[k++] = nums[right++]; 
+        }
+        int m=0;
+        for(int i=low; i<=high; i++){
+            nums[i] = temp[m++];
+        }
+    }
+
+    void mergeSort(vector<int>& nums, int low, int high, int& reversePairsCount){
+        if(low >= high){
+            return;
+        }
+        int mid = (low + high) >> 1;
+        mergeSort(nums, low, mid, reversePairsCount);
+        mergeSort(nums, mid+1, high, reversePairsCount);
+        merge(nums, low, mid, high, reversePairsCount);
+    }
+public:
+    int reversePairs(vector<int>& nums) {
+        int reversePairsCount = 0;
+        mergeSort(nums, 0, nums.size()-1, reversePairsCount);
+        return reversePairsCount;
+    }
+};
+
+//  game of life 
+
+class Solution {
+public:
+    bool isValid(int i, int j , int n , int m , vector<vector<int>> temp_board){
+        return (i>=0 and i<n and j>=0 and j<m and temp_board[i][j]) ;
+    }
+
+    int counting(int i , int j , vector<vector<int>> temp_board , int n , int m){
+        int count = 0;
+        for(int k = -1 ; k<=1 ;k++){
+            for(int l = -1; l<=1 ;l++){
+                if(k==0 and l==0) continue;
+                else if(isValid(i+k , j+l, n, m , temp_board)) count++;
+            }
+        }
+        return count;
+    }
+
+    void gameOfLife(vector<vector<int>>& board) {
+        int n = board.size() , m = board[0].size();
+        vector<vector<int>> temp = board;
+        for(int i=0; i<n;i++){
+            for(int j=0 ; j<m;j++){
+                int count = counting(i,j,board,n,m);
+                if(board[i][j] == 0) {
+                    if(count == 3) temp[i][j] = 1;
+                }
+                else if(board[i][j] == 1){
+                    if(count < 2 or count > 3) temp[i][j] = 0;
+                } 
+            }
+        }
+        board = temp;
+    }
+};
+
+//  max value of equation 
+
+class Solution {
+public:
+    int findMaxValueOfEquation(vector<vector<int>>& points, int k) {
+        int result =INT_MIN ;
+
+        priority_queue<pair<int,int>> pq;
+
+        for(auto it : points){
+            while(pq.size() and (it[0] - pq.top().second > k)) pq.pop();
+            if(pq.size()) result = max(result , it[1] + it[0] + pq.top().first );
+            pq.push({it[1]- it[0] , it[0]}); 
+        }
+
+        return result;
+    }
+};
